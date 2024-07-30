@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function AccountManagement() {
     const [account, setAccount] = useState({ savings: 0, checking: 0 });
     const [amount, setAmount] = useState("");
-    
+
     const [accountType, setAccountType] = useState("savings");
     const navigate = useNavigate();
 
@@ -96,24 +96,35 @@ export default function AccountManagement() {
     };
 
     return (
-        <div>
-            <h3>Account Management</h3>
-            <div>
-                <p>Savings: {account.savings}</p>
-                <p>Checking: {account.checking}</p>
-                <div>
-                    <label>
+        <div class="mx-5">
+            <div class="text-start border-bottom">
+                <h3 class="mt-4">Account Management</h3>
+            </div>
+            <div class="mt-3">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th>Savings: </th>
+                            <td>{account.savings}</td>
+                        </tr>
+                        <tr>
+                            <th>Checking: </th>
+                            <td>{account.checking}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row my-4">
+                    <label class="col">
                         Account:
-                        <select value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                        <select class="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
                             <option value="savings">Savings</option>
                             <option value="checking">Checking</option>
                         </select>
                     </label>
-                </div>
-                <div>
-                    <label>
+                    <label class="col">
                         Amount:
                         <input
+                            class="mx-2"
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
@@ -123,9 +134,13 @@ export default function AccountManagement() {
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
             </div>
-            <h3><Link  style={{ }} to={"/AccountSummary"}>Go back to account summary</Link></h3>
+            <Link to="/AccountSummary">
+                <button>to summary</button>
+            </Link>
 
-            <h3><Link  style={{ }} to={"/Logout"}>Logout</Link></h3>
+            <Link to="/Logout">
+                <button>Logout</button>
+            </Link>
 
         </div>
     );

@@ -111,17 +111,22 @@ export default function AccountManagement() {
                             <th>Checking: </th>
                             <td>{account.checking}</td>
                         </tr>
+                        <tr>
+                            <th>Investing: </th>
+                            <td>{account.inesting}</td>
+                        </tr>
                     </tbody>
                 </table>
-                <div class="row my-4">
+                <div class="d-flex justify-content-between my-4">
                     <label class="col">
                         Account:
                         <select class="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
                             <option value="savings">Savings</option>
                             <option value="checking">Checking</option>
+                            <option value="checking">Investing</option>
                         </select>
                     </label>
-                    <label class="col">
+                    <label class="flex-direction-end">
                         Amount:
                         <input
                             class="mx-2"

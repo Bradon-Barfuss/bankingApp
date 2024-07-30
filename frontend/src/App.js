@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from "./components/Navbar.js";
 import AccountSummary from "./components/AccountSummary.js";
 import Logout from "./components/logout.js";
 import Register from "./components/Register.js";
@@ -9,14 +10,13 @@ import Money from "./components/Money.js"
 const App = () => {
   return (
     <div>
+      <Navbar />
       <Routes>
         <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} />} /> //go to account summary page
         <Route path="/Money" element={<ProtectedRoute component={Money} />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-
-
       </Routes>
     </div>
   );

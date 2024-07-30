@@ -134,14 +134,6 @@ export default function AccountManagement() {
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
             </div>
-            <Link to="/AccountSummary">
-                <button>to summary</button>
-            </Link>
-
-            <Link to="/Logout">
-                <button>Logout</button>
-            </Link>
-
         </div>
     );
 }

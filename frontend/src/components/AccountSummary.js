@@ -7,12 +7,17 @@ const Record = (props) => (
     <td>{props.record.firstName}</td>
     <td>{props.record.lastName}</td>
     <td>{props.record.email}</td>
-    <td>{props.record.phoneNumber}</td>
+    <td>              <select>
+                <option value="Admin">Admin</option>
+                <option value="Customer">Customer</option>
+                <option value="Employee">Employee</option>
+              </select></td>
     <td><Link to={"/Money"}>Account Information</Link></td>
   </tr>
 );
 
 export default function Records() {
+  
   const [record, setRecord] = useState(null);
 
   useEffect(() => {
@@ -35,31 +40,32 @@ export default function Records() {
   }, []);
 //This is why I am NOT going into the UX field, it works, but more i expermited with it the worst it got
   return (
-    <div style={{ fontSize: 18, backgroundColor: "lightgray" }}> 
+    <div className="d-flex justify-content-center align-items-center vh-10">
       <div>
-        <ul style={{ "list-style-type": "none",   overflow: "hidden"}}>
-          <li><h3 style={{   float: "left", paddingLeft: 20 }}>Account Details</h3></li>
-          <li><h3><Link  style={{ float: "left" }} to={"/Logout"}>Logout</Link></h3></li>
+        <ul className="list-unstyled d-flex justify-content-between">
+          <li><h3 className="pl-3">Admin Details</h3></li>
+          <li><h3><Link to="/Logout">Logout</Link></h3></li>
         </ul>
-
+        <br />
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>first Name</th>
+              <th>Roles</th>
+              <th>Change Role</th>
+              <th>Checking/Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {record ? <Record record={record}  /> : (
+              <tr>
+                <td colSpan="5" className="text-center">Loading...</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-<br></br>
-      <table style={{}}>
-        <thead>
-          <tr >
-            <th style={{ padding: 20 }}>First Name</th>
-            <th style={{ padding: 20 }}>Last Name</th>
-            <th style={{ padding: 20 }}> Email</th>
-            <th style={{ padding: 20 }}>Phone Number</th>
-            <th style={{ padding: 20 }}>Checking/Savings</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          <Record style={{ padding: 20 }} record={record || { firstname: "", lastname: "", email: "", phoneNumber: "" }} />
-        </tbody>
-      </table>
-
     </div>
   );
 }

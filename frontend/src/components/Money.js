@@ -8,6 +8,8 @@ export default function AccountManagement() {
     const [amount, setAmount] = useState("");
 
     const [accountType, setAccountType] = useState("savings");
+    const [accountType2, setAccountType2] = useState("checking");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -71,7 +73,7 @@ export default function AccountManagement() {
 
             if (response.ok) {
                 navigate("/AccountSummary");
-            } else{
+            } else {
                 window.alert("Can't go below 0")
             }
         }
@@ -88,7 +90,25 @@ export default function AccountManagement() {
 
             if (response.ok) {
                 navigate("/AccountSummary");
-            } else{
+            } else {
+                window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
+            }
+
+        };
+        if (accountType === "checking") {
+
+            const response = await fetch(`http://localhost:5000/withdrawChecking/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: amount }),
+            });
+
+            if (response.ok) {
+                navigate("/AccountSummary");
+            } else {
                 window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
             }
 
@@ -123,7 +143,7 @@ export default function AccountManagement() {
                         <select class="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
                             <option value="savings">Savings</option>
                             <option value="checking">Checking</option>
-                            <option value="checking">Investing</option>
+                            <option value="investing">Investing</option>
                         </select>
                     </label>
                     <label class="flex-direction-end">
@@ -137,10 +157,44 @@ export default function AccountManagement() {
                     </label>
                 </div>
 
+
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
-                <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit'}}>Transaction History</Link></button>
+                <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit' }}>Transaction History</Link></button>
+
+                <div><h2><br></br>Transfer</h2></div>
+
+                <div className="d-flex justify-content-between my-0">
+                    <label className="d-flex align-items-center">
+                        From:
+                        <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                            <option value="savings">Savings</option>
+                            <option value="checking">Checking</option>
+                            <option value="investing">Investing</option>
+                        </select>
+                    </label>
+                    <label className="d-flex align-items-center">
+                        To:
+                        <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
+                            <option value="savings">Savings</option>
+                            <option value="checking">Checking</option>
+                            <option value="investing">Investing</option>
+                        </select>
+                    </label>
+                    <label className="d-flex align-items-center">
+                        Amount:
+                        <input
+                            className="mx-2"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                        />
+                    </label>
                 </div>
+                <button onClick={Deposit}>Submit</button>
+
+
+            </div>
         </div>
     );
 }

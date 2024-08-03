@@ -136,9 +136,11 @@ export default function AccountManagement() {
                         />
                     </label>
                 </div>
+
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
-            </div>
+                <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit'}}>Transaction History</Link></button>
+                </div>
         </div>
     );
 }

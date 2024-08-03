@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// Component to display a single record
+// Fill with real date for second assingment
 const Record = (props) => (
   <tr>
-    <td>{props.record.firstName}</td>
-    <td>{props.record.lastName}</td>
-    <td>{props.record.email}</td>
-    <td>              <select>
-                <option value="Admin">Admin</option>
-                <option value="Customer">Customer</option>
-                <option value="Employee">Employee</option>
-              </select></td>
-    <td><Link to={"/Money"}>Account Information</Link></td>
+    <td>May 20, 2023</td>
+    <td>12:00PM</td>
+    <td>Savings</td>
+    <td>Checking</td>
+    <td>15</td>
+
   </tr>
 );
 
@@ -22,7 +19,7 @@ export default function Records() {
 
   useEffect(() => {
     async function getRecord() {
-      const response = await fetch(`http://localhost:5000/record/getUserBySession`, { //change to route to get all users
+      const response = await fetch(`http://localhost:5000/record/getUserBySession`, {
         credentials: 'include'
       });
 
@@ -43,17 +40,17 @@ export default function Records() {
     <div className="d-flex justify-content-center align-items-center vh-10">
       <div>
         <ul className="list-unstyled d-flex justify-content-between">
-          <li><h3 className="pl-3">Admin Details</h3></li>
+          <li><h3 className="pl-3">Transaction History </h3></li>
         </ul>
         <br />
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>Id</th>
-              <th>first Name</th>
-              <th>Roles</th>
-              <th>Change Role</th>
-              <th>Checking/Savings</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +61,8 @@ export default function Records() {
             )}
           </tbody>
         </table>
+        <button><Link to="/Money" style={{ textDecoration: 'none', color: 'inherit'}}>Go Back</Link></button>
+
       </div>
     </div>
   );

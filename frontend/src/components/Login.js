@@ -40,7 +40,7 @@ export default function Login() {
         if (!response.ok) {
             window.alert("Enter valid username and password");
         } else {
-            navigate("/AccountSummary");
+            navigate("/AdminAccountSummary");
             setForm({ email: "", password: "" });
         }
     }

@@ -6,6 +6,7 @@ import Logout from "./components/logout.js";
 import Register from "./components/Register.js";
 import Login from "./components/Login.js";
 import Money from "./components/Money.js"
+import TransactionHistory  from "./components/TransactionHistory.js";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} />} /> //go to account summary page
         <Route path="/Money" element={<ProtectedRoute component={Money} />} />
+        <Route path="/TransactionHistory" element={<ProtectedRoute component={TransactionHistory} />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

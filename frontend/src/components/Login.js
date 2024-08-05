@@ -21,7 +21,7 @@ export default function Login() {
         e.preventDefault();
 
         const userCredentials = { ...form };
-        const response = await fetch("http://localhost:5000/record/validAccount", {
+        const response = await fetch("http://localhost:5000/users/validAccount", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

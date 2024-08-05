@@ -10,6 +10,7 @@ export default function Register(){
         email: "",
         phoneNumber: "",
         password: "",
+        role: "Customer" //default value is customer
 
     })
 
@@ -24,7 +25,7 @@ export default function Register(){
     async function onSubmit(e){
         e.preventDefault()
         const newPerson = {...form};
-        const response = await fetch("http://localhost:5000/record/add", {
+        const response = await fetch("http://localhost:5000/users/addUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -19,7 +19,7 @@ export default function Records() {
 
   useEffect(() => {
     async function getRecord() {
-      const response = await fetch(`http://localhost:5000/record/getUserBySession`, {
+      const response = await fetch(`http://localhost:5000/users/getUserBySession`, {
         credentials: 'include'
       });
 

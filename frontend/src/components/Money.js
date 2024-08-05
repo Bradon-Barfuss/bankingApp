@@ -14,7 +14,7 @@ export default function AccountManagement() {
 
     useEffect(() => {
         async function fetchAccount() {
-            const response = await fetch("http://localhost:5000/record/getUserBySession", { //had to get the current user using the session by getting the email
+            const response = await fetch("http://localhost:5000/users/getUserBySession", { //had to get the current user using the session by getting the email
                 credentials: 'include'
             });
 
@@ -28,7 +28,7 @@ export default function AccountManagement() {
     const Deposit = async () => {
         if (accountType === "savings") {
 
-            const response = await fetch(`http://localhost:5000/updateSavings/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/increaseSavings/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export default function AccountManagement() {
         }
         if (accountType === "checking") {
 
-            const response = await fetch(`http://localhost:5000/updateChecking/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/increaseChecking/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export default function AccountManagement() {
     const Withdraw = async () => {
         if (accountType === "savings") {
 
-            const response = await fetch(`http://localhost:5000/withdrawSavings/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/withdrawSavings/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export default function AccountManagement() {
         }
         if (accountType === "checking") {
 
-            const response = await fetch(`http://localhost:5000/withdrawChecking/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/withdrawChecking/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -95,9 +95,9 @@ export default function AccountManagement() {
             }
 
         };
-        if (accountType === "checking") {
+        if (accountType === "checking") { //CHANGE TO INVESTING
 
-            const response = await fetch(`http://localhost:5000/withdrawChecking/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/withdrawChecking/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

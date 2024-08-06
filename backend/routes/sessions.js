@@ -1,7 +1,7 @@
 const express = require("express")
 const routes = express.Router();
 
-//get users email
+//get users email, make sure you include credticals
 routes.route('/session_get_email').get(async function (req, res) {
   res.json({email: req.session.email})
 });

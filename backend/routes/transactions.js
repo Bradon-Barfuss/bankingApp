@@ -5,16 +5,26 @@ const ObjectId = require("mongodb").ObjectId; // This helps convert the id from 
 
 //record/add
 // Add a new user.
+
+//API
+//localhost:5000/transaction/addTransactionInternal/
+//{   
+//    "AccountID" : 955667,
+//    "SendingAccount" : "Savings",
+//    "RecievingAccount" : "Checkings",
+//    "AmountSent" : 30
+//}
 recordRoutes.route("/transaction/addTransactionInternal").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myobj = {
-            Account: req.body.account,
-            Date: req.body.date,
-            Time: req.body.time,
-            SendingAccount: req.body.sendingAccount,
-            RecievingAccount: req.body.recievingAccount,
-            AmountSent: req.body.amountSent,
+            Type: "Internal",
+            AccountID: req.body.AccountID,
+            Date: new Date().toISOString().slice(0, 10), //get the daty
+            Time: new Date().toLocaleTimeString(), //get the time
+            SendingAccount: req.body.SendingAccount, //i.e. checking, saving, investing
+            RecievingAccount: req.body.RecievingAccount, //i.e. checking, saving, investing
+            AmountSent: req.body.AmountSent,
         };
 
         const results = db_connect.collection("transactions").insertOne(myobj);
@@ -24,17 +34,28 @@ recordRoutes.route("/transaction/addTransactionInternal").post(async (req, res) 
     }
 });
 
+
+//API
+//localhost:5000/transaction/addTransactionExternal/
+//{   
+//    "SendingAccountID" : 955667,
+//    "RecievingAccountID" : 123456,
+//    "SendingAccount" : "Investing",
+//    "RecievingAccount" : "Savings",
+//    "AmountSent" : 30
+//}
 recordRoutes.route("/transaction/addTransactionExternal").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myobj = {
-            SendingAccount: req.body.sendingAccount,
-            RecievingAccount: req.body.recievingAccount,
-            Date: req.body.date,
-            Time: req.body.time,
-            SendingAccount: req.body.sendingAccount,
-            RecievingAccount: req.body.recievingAccount,
-            AmountSent: req.body.amountSent,
+            Type: "External",
+            SendingAccountID: req.body.SendingAccountID,
+            RecievingAccountID: req.body.RecievingAccountID,
+            Date: new Date().toISOString().slice(0, 10),
+            Time: new Date().toLocaleTimeString(), 
+            SendingAccount: req.body.SendingAccount,
+            RecievingAccount: req.body.RecievingAccount,
+            AmountSent: req.body.AmountSent,
         };
         
         const results = db_connect.collection("transactions").insertOne(myobj);

@@ -38,7 +38,7 @@ app.use(express.json())
 app.use(require("./routes/sessions"))
 app.use(require("./routes/users"))
 app.use(require("./routes/banking"))
-
+app.use(require("./routes/transactions"))
 
 
 

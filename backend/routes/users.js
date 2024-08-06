@@ -31,8 +31,8 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
 //localhost:5000/users/listAllUsers
 recordRoutes.route("/users/listAllUsers").get(async (req, res) => {
     try {
-        let db_connect = dbo.getDb("Banking");
-        let projection = { firstName: 1, lastName: 1, email: 1, phoneNumber: 1, role: 1, savings: 1, checking: 1, investing: 1 };
+        let db_connect = dbo.getDb();
+        let projection = { accountNumber: 1, firstName: 1, lastName: 1, email: 1, phoneNumber: 1, role: 1, savings: 1, checking: 1, investing: 1 };
 
         const results = await db_connect.collection("users").find({}, { projection }).toArray();
         res.json(results)

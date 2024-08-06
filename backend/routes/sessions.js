@@ -1,6 +1,11 @@
 const express = require("express")
 const routes = express.Router();
 
+//get users email
+routes.route('/session_get_email').get(async function (req, res) {
+  res.json({email: req.session.email})
+});
+
 routes.route("/session_set").get(async function (req, res){
     console.log("In /session_set, seeesion is: " + req.session.email)
     let status = ""

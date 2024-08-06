@@ -26,6 +26,22 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
 });
 
 
+recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
+    try{
+        let db_connect = dbo.getDb();
+        let projection = {role: 1};
+        let query = { email: req.params.email };
+
+        const user = await db_connect.collection("users").findOne(query, {projection});
+        res.json(user)
+
+
+    } catch (err){
+        throw err;
+    }
+})
+
+
 // List all users
 //API
 //localhost:5000/users/listAllUsers
@@ -52,8 +68,8 @@ recordRoutes.route("/users/getUserBySession").get(async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: "error" }); //if no email was found, 
     }
-
 });
+
 
 // find users by user email
 //API

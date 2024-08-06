@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// Component to display a single record
+// component to display a single record
 const Record = ({ record, onRoleChange }) => {
   const [role, setRole] = useState(record.role);
 

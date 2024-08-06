@@ -6,7 +6,6 @@ const recordRoutes = express.Router();
 const dbo = require("../db/conn.js"); // This will help us connect to the database
 const ObjectId = require("mongodb").ObjectId; // This helps convert the id from string to ObjectId for the _id.
 
-//Old route name /record/validAccount
 recordRoutes.route("/users/validAccount").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
@@ -25,7 +24,7 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
     }
 });
 
-
+//get role by email
 recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
     try{
         let db_connect = dbo.getDb();
@@ -56,7 +55,6 @@ recordRoutes.route("/users/listAllUsers").get(async (req, res) => {
     }
 });
 
-// old route name record / getUserBySession
 recordRoutes.route("/users/getUserBySession").get(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
@@ -87,8 +85,7 @@ recordRoutes.route("/users/getUser/:email").get(async (req, res) => {
     }
 });
 
-// Add a new user.
-//API IT WORKS
+//API
 //localhost:5000/users/addUser/
 //{   
 //    "email" : "bradonbarfuss@gmail.com",
@@ -152,7 +149,6 @@ recordRoutes.route("/users/updateRole/:email").post(async (req, res) => {
         throw err;
     }
 });
-
 
 // Delete Users by users ID
 // /:id"

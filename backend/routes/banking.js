@@ -315,4 +315,254 @@ recordRoutes.route("/banking/InvestingToSavings/:email").post(async (req, res) =
 
 
 // ============================================ TRANSFER BETWEEN DIFFERENT ACCOUNTS ===================================
+//You have to put the verficing both accounts before you can change the values, that is why it checks for both accounts, then changes the values in each
+
+
+//API
+// localhost:5000/banking/CheckingToSavingExternal
+//{   
+//    "sendingAccountNumber" : 955667,
+//    "receivingAccountNumber": 426965,
+//    "checking" : 1
+//}
+recordRoutes.route("/banking/CheckingToSavingExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { checking: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.checking - req.body.checking < 0) { return await res.status(400).json({ message: "Withdraw to much money from checking" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { savings: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { checking: -req.body.checking } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { savings: req.body.checking } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External Checking -> Savings" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+
+//API
+//localhost:5000/banking/CheckingToInvestingExternal
+//{   //  "sendingAccountNumber" : 955667,
+//   "receivingAccountNumber": 426965,
+//   "checking" : 1
+//}
+recordRoutes.route("/banking/CheckingToInvestingExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { checking: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.checking - req.body.checking < 0) { return await res.status(400).json({ message: "Withdraw to much money from checking" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { investing: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { checking: -req.body.checking } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { investing: req.body.checking } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External Checking -> investing" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+//======Savings -> Checking/Investing =======
+
+//API
+//localhost:5000/banking/SavingToCheckingExternal
+//{   
+//    "sendingAccountNumber" : 955667,
+//    "receivingAccountNumber": 426965,
+//    "savings" : 1
+//}
+recordRoutes.route("/banking/SavingToCheckingExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { savings: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.savings - req.body.savings < 0) { return await res.status(400).json({ message: "Withdraw to much money from savings" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { checking: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { savings: -req.body.savings } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { checking: req.body.savings } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External savings -> checking" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+
+//API
+//localhost:5000/banking/SavingToInvestingExternal
+//{   
+//    "sendingAccountNumber" : 955667,
+//    "receivingAccountNumber": 426965,
+//    "savings" : 1
+//}
+recordRoutes.route("/banking/SavingToInvestingExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { savings: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.savings - req.body.savings < 0) { return await res.status(400).json({ message: "Withdraw to much money from savings" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { investing: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { savings: -req.body.savings } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { investing: req.body.savings } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External savings -> investing" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+//======= Investing -> checking/savings
+//API
+//localhost:5000/banking/InvestingToCheckingExternal
+//{   
+//    "sendingAccountNumber" : 955667,
+//    "receivingAccountNumber": 426965,
+//    "investing" : 1
+//}
+recordRoutes.route("/banking/InvestingToCheckingExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { investing: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.investing - req.body.investing < 0) { return await res.status(400).json({ message: "Withdraw to much money from investing" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { checking: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { investing: -req.body.investing } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { checking: req.body.investing } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External investing -> checking" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+//API
+//localhost:5000/banking/InvestingToSavingsExternal
+//{   
+//    "sendingAccountNumber" : 955667,
+//    "receivingAccountNumber": 426965,
+//    "investing" : 1
+//}
+recordRoutes.route("/banking/InvestingToSavingsExternal").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+
+        //sending Query + Verification
+        let querySending = { accountNumber: req.body.sendingAccountNumber };
+        let projectionSending = { investing: 1 }  
+
+        let accountSending = await db_connect.collection("users").findOne(querySending, { projectionSending })
+        if (!accountSending) { return res.status(400).json({ message: "Sending account not found" }); }
+        if (accountSending.investing - req.body.investing < 0) { return await res.status(400).json({ message: "Withdraw to much money from investing" }) } 
+
+        //receving Query + Verification
+        queryReceiving = { accountNumber: req.body.receivingAccountNumber };
+        projectionReceiving = { savings: 1 }  
+
+        accountReceiving = await db_connect.collection("users").findOne(queryReceiving, { projectionReceiving })
+        if (!accountReceiving) { return res.status(400).json({ message: "Reciving account not found" }); }
+
+        //change actual values of stuff
+        let newvalueSending = { $inc: { investing: -req.body.investing } };  
+        db_connect.collection("users").updateOne(querySending, newvalueSending)
+
+        let newvalueReceiving = { $inc: { savings: req.body.investing } };  
+        db_connect.collection("users").updateOne(queryReceiving, newvalueReceiving)
+
+
+        return await res.status(400).json({ message: "External investing -> savings" })  
+    } catch (err) {
+        throw err;
+    }
+});
+
+
+
+
 module.exports = recordRoutes;

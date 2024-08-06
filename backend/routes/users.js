@@ -31,7 +31,7 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
 //localhost:5000/users/listAllUsers
 recordRoutes.route("/users/listAllUsers").get(async (req, res) => {
     try {
-        let db_connect = dbo.getDb("NonPaidIntern");
+        let db_connect = dbo.getDb("Banking");
         let projection = { firstName: 1, lastName: 1, email: 1, phoneNumber: 1, role: 1, savings: 1, checking: 1, investing: 1 };
 
         const results = await db_connect.collection("users").find({}, { projection }).toArray();
@@ -103,9 +103,6 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
             checking: 0,
             investing: 0
         };
-        console.log("MYOBJ: ", myobj)
-
-
         let query = { email: req.body.email }
         let countValues = await db_connect.collection("users").countDocuments(query)
         if (countValues > 0) {
@@ -120,8 +117,7 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
 
 
 //Update a Users Role by the users email address
-
-//API IT WORKS
+//API
 //localhost:5000/users/updateRole/bradonbarfuss@gmail.com
 //{   
 //    "role" : "Admin"
@@ -136,7 +132,6 @@ recordRoutes.route("/users/updateRole/:email").post(async (req, res) => {
             },
         };
         const result = await db_connect.collection("users").updateOne(myquery, newvalues)
-        console.log("1 role udpated")
         res.json(result)
     } catch (err) {
         throw err;
@@ -152,8 +147,6 @@ recordRoutes.route("/users/deleteUser/:id").delete(async (req, res) => {
         let myquery = { _id: new ObjectId(req.params.id) };
         const result = db_connect.collection("users").deleteOne(myquery);
         res.json(result)
-        console.log("1 document deleted");
-
     } catch (err) {
         throw err;
     }

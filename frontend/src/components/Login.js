@@ -38,7 +38,7 @@ export default function Login() {
         console.log("Response message: " + data.message);
 
         if (!response.ok) {
-            window.alert("Enter valid username and password");
+            window.alert("Enter valid username or password");
         } else {
             navigate("/AccountSummary");
             setForm({ email: "", password: "" });

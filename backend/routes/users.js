@@ -35,7 +35,6 @@ recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
         const user = await db_connect.collection("users").findOne(query, {projection});
         res.json(user)
 
-
     } catch (err){
         throw err;
     }

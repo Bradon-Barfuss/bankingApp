@@ -25,29 +25,10 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
     }
 });
 
-recordRoutes.route("/users/update/:email").put(async (req, res) => {
-    try {
-        let db_connect = dbo.getDb();
-        let myquery = { email: req.params.email };
-        let newvalues = {
-            $set: {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                role: req.body.role,
-                phoneNumber: req.body.phoneNumber,
-                password: req.body.password,
-            },
-        };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
-        console.log("1 role udpated")
-        res.json(result)
-    } catch (err) {
-        throw err;
-    }
-});
 
-// Old Route Name /record
 // List all users
+//API
+//localhost:5000/users/listAllUsers
 recordRoutes.route("/users/listAllUsers").get(async (req, res) => {
     try {
         let db_connect = dbo.getDb("NonPaidIntern");
@@ -75,7 +56,8 @@ recordRoutes.route("/users/getUserBySession").get(async (req, res) => {
 });
 
 // find users by user email
-//record/:email
+//API
+//localhost:5000/users/getUser/JohnDoe@gmail.com
 recordRoutes.route("/users/getUser/:email").get(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
@@ -101,7 +83,6 @@ recordRoutes.route("/users/getUser/:email").get(async (req, res) => {
 //    "password" : "12345",
 //    "role" : "Admin"
 //}
-
 recordRoutes.route("/users/addUser").post(async (req, res) => {
     try {
         //make account number

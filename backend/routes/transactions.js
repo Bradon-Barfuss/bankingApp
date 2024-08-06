@@ -65,7 +65,37 @@ recordRoutes.route("/transaction/addTransactionExternal").post(async (req, res) 
     }
 });
 
+//API
+//localhost:5000/transaction/listAllTransactionInternal
+recordRoutes.route("/transaction/listAllTransactionInternal").get(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let projection = { accountNumber: 1, Date: 1, Time: 1, SendingAccount: 1, RecievingAccount: 1, AmountSent: 1 };
+        let query = { Type: 'Internal' };
 
+
+        const results = await db_connect.collection("transactions").find(query, { projection }).toArray();
+        res.json(results)
+    } catch (err) {
+        throw err;
+    }
+});
+
+//API
+//localhost:5000/transaction/listAllTransactionExternal
+recordRoutes.route("/transaction/listAllTransactionExternal").get(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let projection = { SendingAccountNumber: 1, RecievingAccountNumber: 1, Date: 1, Time: 1, SendingAccount: 1, RecievingAccount: 1, AmountSent: 1 };
+        let query = { Type: 'External' };
+
+
+        const results = await db_connect.collection("transactions").find(query, { projection }).toArray();
+        res.json(results)
+    } catch (err) {
+        throw err;
+    }
+});
 
 
 module.exports = recordRoutes;

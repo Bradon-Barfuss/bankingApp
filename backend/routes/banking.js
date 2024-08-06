@@ -313,4 +313,6 @@ recordRoutes.route("/banking/InvestingToSavings/:email").post(async (req, res) =
     }
 });
 
+
+// ============================================ TRANSFER BETWEEN DIFFERENT ACCOUNTS ===================================
 module.exports = recordRoutes;

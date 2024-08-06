@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 
 // Component to display a single record
 const Record = ({ record, onRoleChange }) => {
-
   const [role, setRole] = useState(record.role);
 
+  //this role change actually changes the value at the database
   const handleRoleChange = async (event) => {
+    //event.target gives you the element that triggered the event.
+    //So, event.target.value retrieves the value of that element (an input field, in your example).
+    //https://stackoverflow.com/questions/67014481/what-is-event-target-value-in-react-exactly
     const newRole = event.target.value;
     setRole(newRole);
     onRoleChange(record.email, newRole);
@@ -31,7 +34,7 @@ const Record = ({ record, onRoleChange }) => {
       <td>{record.lastName}</td>
       <td>{record.email}</td>
       <td>
-        <select value={role} onChange={handleRoleChange}>
+        <select value={role} onChange={handleRoleChange}> 
           <option value="Admin">Admin</option>
           <option value="Customer">Customer</option>
           <option value="Employee">Employee</option>
@@ -42,10 +45,9 @@ const Record = ({ record, onRoleChange }) => {
   );
 };
 
-
 export default function Records() {
   const [records, setRecords] = useState([]);
-  
+
   useEffect(() => {
     async function getRecord() {
       const response = await fetch(`http://localhost:5000/users/listAllUsers`, { //change to route to get all users
@@ -61,19 +63,20 @@ export default function Records() {
       const fetchedRecords = await response.json();
       setRecords(fetchedRecords);
     }
-
     getRecord();
   }, []);
 
-  //https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array
+  //this role change changes the value on the display
   const handleRoleChange = (email, newRole) => {
-    setRecords(prevRecords =>
-      prevRecords.map(record =>
-        record.email === email ? { ...record, role: newRole } : record
-      )
-    );
+    setRecords(records => records.map(record => {
+      if (record.email === email) {
+        return { ...record, role: newRole }; //if te records email matches the new email, make a new record with the new role
+      }
+      else {
+        return record //else, just return the record
+      }
+    }));
   };
-
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-10">
@@ -93,13 +96,9 @@ export default function Records() {
             </tr>
           </thead>
           <tbody>
-            {records ? (records.map(record => (
-              <Record key={record._id} record={record} onRoleChange={handleRoleChange} />
-            ))) : (
-              <tr>
-                <td colSpan="5" className="text-center">Loading...</td>
-              </tr>
-            )}
+            {records.map(record => (
+              <Record key={record._id} record={record} onRoleChange={handleRoleChange} /> //Why the key is needed https://stackoverflow.com/questions/68014046/warning-each-child-in-a-list-should-have-a-unique-key-prop-but-i-have-key-pro 
+            ))}
           </tbody>
         </table>
       </div>

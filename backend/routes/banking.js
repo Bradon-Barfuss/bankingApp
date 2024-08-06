@@ -12,6 +12,12 @@ const ObjectId = require("mongodb").ObjectId; // This helps convert the id from 
 // ========================================== INCREASE ACCOUNTS ====================================
 //Old route: updateSavings/:email
 //Update Users Savings
+
+//API
+//localhost:5000/banking/increaseSavings/bradonbarfuss@gmail.com
+//{   
+//    "savings" : 20
+//}
 recordRoutes.route("/banking/increaseSavings/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
@@ -20,7 +26,8 @@ recordRoutes.route("/banking/increaseSavings/:email").post(async (req, res) => {
         let newvalues = {
             $inc: { savings: req.body.savings } //increase users saving by the savings in reqest body
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues) //update the databases by new value
+        const result = db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
         console.log("Savings updated. Email: ", req.params.email, " Increase By: ", req.body.savings); //debug
         res.json(result)
     } catch (err) {
@@ -37,7 +44,7 @@ recordRoutes.route("/banking/increaseChecking/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { checking: req.body.checking }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         console.log("Checking updated. Email: ", req.params.email, " Increase By: ", req.body.checking); //debug
         res.json(result)
     } catch (err) {
@@ -53,7 +60,7 @@ recordRoutes.route("/banking/increaseInvesting/:email").post(async (req, res) =>
         let newvalues = {
             $inc: { investing: req.body.investing }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         console.log("investing updated. Email: ", req.params.email, " Increase By: ", req.body.investing); //debug
         res.json(result)
     } catch (err) {
@@ -71,14 +78,14 @@ recordRoutes.route("/banking/withdrawSavings/:email").post(async (req, res) => {
 
         //Check if savings is above 0
         let projection = { savings: 1 }
-        emailWithSavings = await db_connect.collection("banking").findOne(myquery, { projection }) //DO I NEED TO ADD A LET IN FRONT?
+        emailWithSavings = await db_connect.collection("users").findOne(myquery, { projection }) //DO I NEED TO ADD A LET IN FRONT?
         if (emailWithSavings.savings - req.body.savings < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
 
         //Update Savings
         let newvalues = { $inc: { savings: -req.body.savings } };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(200).json({ message: "It Worked" })
     } catch (err) {
         throw err;
@@ -93,7 +100,7 @@ recordRoutes.route("/banking/withdrawChecking/:email").post(async (req, res) => 
 
         //Check if checkings is above 0
         let projection = { checking: 1 }
-        emailWithChecking = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithChecking = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithChecking.checking - req.body.checking < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
@@ -102,7 +109,7 @@ recordRoutes.route("/banking/withdrawChecking/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { checking: -req.body.checking }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(200).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
@@ -116,7 +123,7 @@ recordRoutes.route("/banking/withdrawInvesting/:email").post(async (req, res) =>
 
         //Check if investing is above 0
         let projection = { investing: 1 }
-        emailWithInvesting = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithInvesting = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithChecking.investing - req.body.investing < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
@@ -125,7 +132,7 @@ recordRoutes.route("/banking/withdrawInvesting/:email").post(async (req, res) =>
         let newvalues = {
             $inc: { investing: -req.body.investing }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(200).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
@@ -138,14 +145,20 @@ recordRoutes.route("/banking/withdrawInvesting/:email").post(async (req, res) =>
 // === Checking to savings/investings
 
 //Old route name /CheckingToSavings/:email
-recordRoutes.route("banking/CheckingToSaving/:email").post(async (req, res) => {
+
+//API
+//localhost:5000/banking/CheckingToSaving/bradonbarfuss@gmail.com
+//{   
+//    "checking" : 60
+//}
+recordRoutes.route("/banking/CheckingToSaving/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { checking: 1, savings: 1 }
 
         //Check if checking is above 0 
-        emailWithChecking = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithChecking = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithChecking.checking - req.body.checking < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from checking" })
         }
@@ -155,21 +168,27 @@ recordRoutes.route("banking/CheckingToSaving/:email").post(async (req, res) => {
             $inc: { checking: -req.body.checking, savings: req.body.checking }
         };
 
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(400).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
     }
 });
 
-recordRoutes.route("banking/CheckingToInvesting/:email").post(async (req, res) => {
+
+//API
+//localhost:5000/banking/CheckingToInvesting/bradonbarfuss@gmail.com
+//{   
+//    "checking" : 60
+//}
+recordRoutes.route("/banking/CheckingToInvesting/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { checking: 1, investing: 1 }
 
         //Check if checking is above 0 
-        emailWithChecking = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithChecking = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithChecking.checking - req.body.checking < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from checking" })
         }
@@ -179,22 +198,27 @@ recordRoutes.route("banking/CheckingToInvesting/:email").post(async (req, res) =
             $inc: { checking: -req.body.checking, investing: req.body.checking }
         };
 
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(400).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
     }
 });
 
-
 // === Savings to Checking/investing
-recordRoutes.route("banking/SavingToChecking/:email").post(async (req, res) => {
+
+//API
+//localhost:5000/banking/SavingToChecking/bradonbarfuss@gmail.com//
+//{   
+//    "savings" : 60
+//}
+recordRoutes.route("/banking/SavingToChecking/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { checking: 1, savings: 1 }
 
-        emailWithSavings = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithSavings = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithSavings.savings - req.body.savings < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from savings" })
         }
@@ -202,20 +226,25 @@ recordRoutes.route("banking/SavingToChecking/:email").post(async (req, res) => {
         let newvalues = {
             $inc: { savings: -req.body.savings, checking: req.body.savings }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(400).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
     }
 });
 
-recordRoutes.route("banking/SavingToInvesting/:email").post(async (req, res) => {
+//API
+//localhost:5000/banking/SavingToInvesting/bradonbarfuss@gmail.com
+//{   
+//    "savings" : 2
+//}
+recordRoutes.route("/banking/SavingToInvesting/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { savings: 1, investing: 1 }
 
-        emailWithSavings = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithSavings = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithSavings.savings - req.body.savings < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from savings" })
         }
@@ -223,7 +252,7 @@ recordRoutes.route("banking/SavingToInvesting/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { savings: -req.body.savings, investing: req.body.savings }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(400).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
@@ -232,13 +261,18 @@ recordRoutes.route("banking/SavingToInvesting/:email").post(async (req, res) => 
 
 //==== Investings To savings/checking
 
-recordRoutes.route("banking/InvestingToChecking/:email").post(async (req, res) => {
+//API
+//localhost:5000/banking/InvestingToChecking/bradonbarfuss@gmail.com
+//{   
+//    "investing" : 200
+//}
+recordRoutes.route("/banking/InvestingToChecking/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { investing: 1, checking: 1 }
 
-        emailWithInvesting = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithInvesting = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithInvesting.investing - req.body.investing < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from investing" })
         }
@@ -246,20 +280,25 @@ recordRoutes.route("banking/InvestingToChecking/:email").post(async (req, res) =
         let newvalues = {
             $inc: { investing: -req.body.investing, checking: req.body.investing }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(400).json({ message: "IT did it! investing -> checking" })
     } catch (err) {
         throw err;
     }
 });
 
-recordRoutes.route("banking/InvestingToSavings/:email").post(async (req, res) => {
+//API
+//localhost:5000/banking/InvestingToSavings/bradonbarfuss@gmail.com
+//{   
+//    "investing" : 170
+//}
+recordRoutes.route("/banking/InvestingToSavings/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
         let projection = { investing: 1, savings: 1 }
 
-        emailWithInvesting = await db_connect.collection("banking").findOne(myquery, { projection })
+        emailWithInvesting = await db_connect.collection("users").findOne(myquery, { projection })
         if (emailWithInvesting.investing - req.body.investing < 0) {
             return await res.status(400).json({ message: "Withdraw to much money from investing" })
         }
@@ -267,13 +306,11 @@ recordRoutes.route("banking/InvestingToSavings/:email").post(async (req, res) =>
         let newvalues = {
             $inc: { investing: -req.body.investing, savings: req.body.investing }
         };
-        const result = db_connect.collection("banking").updateOne(myquery, newvalues)
-        return await res.status(400).json({ message: "IT did it! investing -> checking" })
+        const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        return await res.status(400).json({ message: "IT did it! investing -> savings" })
     } catch (err) {
         throw err;
     }
 });
-
-
 
 module.exports = recordRoutes;

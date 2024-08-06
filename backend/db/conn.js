@@ -26,8 +26,7 @@ module.exports = {
                 // Send a ping to confirm a successful connection
                 await client.db("admin").command({ ping: 1 });
                 console.log("Pinged your deployment. You successfully connected to MongoDB!");
-                _db = client.db("NonPaidIntern");
-                console.log("Succesffully connected to employees collection")
+                _db = client.db("Banking");
             } finally {
                 // Ensures that the client will close when you finish/error
                 // console.log("Closing the concole")

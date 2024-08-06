@@ -90,9 +90,18 @@ recordRoutes.route("/users/getUser/:email").get(async (req, res) => {
     }
 });
 
-
-//record/add
 // Add a new user.
+//API IT WORKS
+//localhost:5000/users/addUser/
+//{   
+//    "email" : "bradonbarfuss@gmail.com",
+//    "firstName" : "Bradon",
+//   "lastName" : "Barfuss",
+//   "phoneNumber" : "8016980000",
+//    "password" : "12345",
+//    "role" : "Admin"
+//}
+
 recordRoutes.route("/users/addUser").post(async (req, res) => {
     try {
         //make account number
@@ -113,6 +122,8 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
             checking: 0,
             investing: 0
         };
+        console.log("MYOBJ: ", myobj)
+
 
         let query = { email: req.body.email }
         let countValues = await db_connect.collection("users").countDocuments(query)
@@ -128,6 +139,12 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
 
 
 //Update a Users Role by the users email address
+
+//API IT WORKS
+//localhost:5000/users/updateRole/bradonbarfuss@gmail.com
+//{   
+//    "role" : "Admin"
+//}
 recordRoutes.route("/users/updateRole/:email").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
@@ -137,7 +154,7 @@ recordRoutes.route("/users/updateRole/:email").post(async (req, res) => {
                 role: req.body.role
             },
         };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues)
         console.log("1 role udpated")
         res.json(result)
     } catch (err) {

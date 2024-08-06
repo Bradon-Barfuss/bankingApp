@@ -31,11 +31,13 @@ export default function Register(){
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(newPerson),
+
         })
         .catch(error => {
             window.alert(error);
             return;
         });
+        console.log(response)
 
         if(!response.ok){
             window.alert("Please try a different email")

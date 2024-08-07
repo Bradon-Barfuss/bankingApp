@@ -5,25 +5,40 @@ const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn.js"); // This will help us connect to the database
 const ObjectId = require("mongodb").ObjectId; // This helps convert the id from string to ObjectId for the _id.
+const bcrypt = require("bcrypt")
+
 
 //Old route name /record/validAccount
 recordRoutes.route("/users/validAccount").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
 
-        let query = { email: req.body.email, password: req.body.password }
+        let query = { email: req.body.email }
         const user = await db_connect.collection("users").findOne(query);
 
-        if (user) {
-            req.session.email = user.email; //SET THE SESSION ID TO THE USER EMAIL, THIS WHAT VALIDATES IF THE USER IS CORRECT
-            return res.status(200).json({ message: "Login successful" });
-        } else {
-            return res.status(400).json({ message: "Invalid email or password" });
+
+        console.log("Entered Password: ", req.body.password)
+        console.log("encrypted fetched Password: ", user.password)
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid email or password' });
         }
+        const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+        await console.log("THIS: ", req.body.password, user.password)
+
+        if (isPasswordValid) {
+            req.session.email = req.body.email; // Set the session ID to the user email
+            return res.status(200).json({ message: 'Login successful' });
+        } else {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+  
     } catch (err) {
         throw err;
     }
 });
+
+
 
 
 recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
@@ -104,7 +119,7 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
         const min = 100000
         const max = 999999
         const accountNumberValue = Math.floor(Math.random() * (max - min + 1)) + min
-
+        let passwordEncypt = await bcrypt.hash(req.body.password, 12)
         let db_connect = dbo.getDb();
         let myobj = {
             email: req.body.email,
@@ -112,7 +127,7 @@ recordRoutes.route("/users/addUser").post(async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             phoneNumber: req.body.phoneNumber,
-            password: req.body.password,
+            password: passwordEncypt,
             role: req.body.role,
             savings: 0,
             checking: 0,

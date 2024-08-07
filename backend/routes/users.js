@@ -16,9 +16,6 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
         const user = await db_connect.collection("users").findOne(query);
 
 
-        console.log("Entered Password: ", req.body.password)
-        console.log("encrypted fetched Password: ", user.password)
-
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }

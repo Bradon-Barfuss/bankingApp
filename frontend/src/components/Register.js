@@ -10,7 +10,7 @@ export default function Register(){
         email: "",
         phoneNumber: "",
         password: "",
-        role: "Customer" //default value is customer
+        role: "Admin" //default value is Admin
 
     })
 

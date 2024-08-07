@@ -37,13 +37,7 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 //get role by email
-=======
-
-
-
->>>>>>> BradonBranchPart2
 recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
     try{
         let db_connect = dbo.getDb();

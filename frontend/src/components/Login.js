@@ -40,7 +40,30 @@ export default function Login() {
         if (!response.ok) {
             window.alert("Enter valid username or password");
         } else {
-            navigate("/AccountSummary");
+            const FetchedEmail = await fetch('http://localhost:5000/session_get_email', {
+                credentials: 'include'
+              });
+              let userEmailParsed = await FetchedEmail.json()
+              let userEmail = userEmailParsed.email
+      
+              //Get the users role
+              const FetchedUserRole = await fetch(`http://localhost:5000/users/getRole/${userEmail}`)
+              let userRoleParsed = await FetchedUserRole.json()
+              let userRole = userRoleParsed.role
+
+              if(userRole === 'Admin'){
+                navigate("/AccountSummary");
+              } else if (userRole === 'Employee'){
+                navigate("/AccountSummary") //make it employee page, where they put in bank number and pulls up bank information
+              }
+              else if (userRole === 'Customer'){
+                navigate("Money") //Make it customer page
+              }
+              else{
+                window.alert("No Role Found");
+
+              }
+
             setForm({ email: "", password: "" });
         }
     }

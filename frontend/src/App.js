@@ -14,7 +14,7 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} allowedRoles={["Admin", "Employee"]}/> }  /> //set allowed roles for that site
-        <Route path="/Money" element={<ProtectedRoute component={Money} />} />
+        <Route path="/Money" element={<ProtectedRoute component={Money} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
         <Route path="/TransactionHistory" element={<ProtectedRoute component={TransactionHistory} />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Login />} />
@@ -64,7 +64,7 @@ const ProtectedRoute = ({ component: Component , allowedRoles}) => { //For futur
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Doing stuff in the background, please be patient for 0.0000000000000000000000001 of a second</div>; // Show loading while checking session, idk but it needs it
+    return <div>Doing stuff in the background, please be patient for 0.000000000000001 of a second</div>; // Show loading while checking session, idk but it needs it
   }
 
   return isAuthenticated ? <Component /> : <Navigate to="/" />; //For future reference: https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/3818

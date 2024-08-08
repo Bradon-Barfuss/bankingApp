@@ -55,7 +55,6 @@ export default function AccountManagement() {
             if (response.ok) {
                 navigate("/AccountSummary");
             }
-
         };
     }
 
@@ -162,100 +161,97 @@ export default function AccountManagement() {
                 <button onClick={Withdraw}>Withdraw</button>
                 <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit' }}>Transaction History</Link></button>
 
-                <div><h2><br></br>Internal Transfer</h2></div>
-
-                <div className="d-flex justify-content-between my-0">
-                    <label className="d-flex align-items-center">
-                        From:
-                        <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
-                            <option value="savings">Savings</option>
-                            <option value="checking">Checking</option>
-                            <option value="investing">Investing</option>
-                        </select>
-                    </label>
-                    <label className="d-flex align-items-center">
-                        To:
-                        <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
-                            <option value="savings">Savings</option>
-                            <option value="checking">Checking</option>
-                            <option value="investing">Investing</option>
-                        </select>
-                    </label>
-                    <label className="d-flex align-items-center">
-                        Amount:
-                        <input
-                            className="mx-2"
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
-                    </label>
-                </div>
-                <button onClick={Deposit}>Submit</button>
-
-
-
-
-
-
-
-
-
-                <div><h2><br></br>External Transfer</h2></div>
-                <div className="d-flex justify-content-start my-0"> 
-                    <label className="d-flex align-items-center me-3">
-                        
-                        <label class="flex-direction-end">
-                        From:
-                        <input
-                            class="mx-2"
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
-                    </label>
-                    <label className="d-flex align-items-center">
-                        To:
-                        <input
-                            class="mx-2"
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
-                    </label>
-                    </label>
-
+                <div>
+                    <br/>
+                    <h2>Internal Transfer</h2>
+                    <div className="d-flex justify-content-between my-0">
+                        <label className="d-flex align-items-center">
+                            From:
+                            <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                                <option value="savings">Savings</option>
+                                <option value="checking">Checking</option>
+                                <option value="investing">Investing</option>
+                            </select>
+                        </label>
+                        <label className="d-flex align-items-center">
+                            To:
+                            <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
+                                <option value="savings">Savings</option>
+                                <option value="checking">Checking</option>
+                                <option value="investing">Investing</option>
+                            </select>
+                        </label>
+                        <label className="d-flex align-items-center">
+                            Amount:
+                            <input
+                                className="mx-2"
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                            />
+                        </label>
+                    </div>
+                    <button onClick={Deposit}>Submit</button>
                 </div>
 
-                <div className="d-flex justify-content-between my-0">
-                    <label className="d-flex align-items-center">
-                        From:
-                        <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
-                            <option value="savings">Savings</option>
-                            <option value="checking">Checking</option>
-                            <option value="investing">Investing</option>
-                        </select>
-                    </label>
-                    <label className="d-flex align-items-center">
-                        To:
-                        <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
-                            <option value="savings">Savings</option>
-                            <option value="checking">Checking</option>
-                            <option value="investing">Investing</option>
-                        </select>
-                    </label>
-                    <label className="d-flex align-items-center">
-                        Amount:
-                        <input
-                            className="mx-2"
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                        />
-                    </label>
-                </div>
-                <button onClick={Deposit}>Submit</button>
+                {account.role != "Customer" &&
+                    <div>
+                        <br/>
+                        <h2>External Transfer</h2>
+                        <div className="d-flex justify-content-start my-0">
+                            <label className="d-flex align-items-center me-3">
+                                <label class="flex-direction-end">
+                                From:
+                                <input
+                                    class="mx-2"
+                                    type="number"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                />
+                                </label>
+                                <label className="d-flex align-items-center">
+                                    To:
+                                    <input
+                                        class="mx-2"
+                                        type="number"
+                                        value={amount}
+                                        onChange={(e) => setAmount(e.target.value)}
+                                    />
+                                </label>
+                            </label>
 
+                        </div>
+
+                        <div className="d-flex justify-content-between my-0">
+                            <label className="d-flex align-items-center">
+                                From:
+                                <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                                    <option value="savings">Savings</option>
+                                    <option value="checking">Checking</option>
+                                    <option value="investing">Investing</option>
+                                </select>
+                            </label>
+                            <label className="d-flex align-items-center">
+                                To:
+                                <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
+                                    <option value="savings">Savings</option>
+                                    <option value="checking">Checking</option>
+                                    <option value="investing">Investing</option>
+                                </select>
+                            </label>
+                            <label className="d-flex align-items-center">
+                                Amount:
+                                <input
+                                    className="mx-2"
+                                    type="number"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                />
+                            </label>
+                        </div>
+                        <button onClick={Deposit}>Submit</button>
+                    </div>
+                }
             </div>
         </div>
     );

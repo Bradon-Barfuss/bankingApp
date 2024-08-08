@@ -20,7 +20,6 @@ recordRoutes.route("/users/validAccount").post(async (req, res) => {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
-        await console.log("THIS: ", req.body.password, user.password)
 
         if (isPasswordValid) {
             req.session.email = req.body.email; // Set the session ID to the user email

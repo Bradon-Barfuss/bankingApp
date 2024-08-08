@@ -12,7 +12,6 @@ const Record = (props) => (
         <td>{props.record.password}</td>
 
         <td><Link to={`/edit/${props.record.email}`}>edit</Link></td>
-
     </tr>
 )
 
@@ -32,7 +31,6 @@ export default function Records(){
             return;
         }
 
-        
         getRecords();
         return;
     }, [records.length]);
@@ -40,7 +38,7 @@ export default function Records(){
     function recordList(){
         return records.map((record) => {
             return (
-                <Record 
+                <Record
                     record={record}
                     key={record._id}
                 />
@@ -53,7 +51,6 @@ export default function Records(){
             <table style={{marginTop: 20}}>
                 <thead>
                     <tr>
-
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>

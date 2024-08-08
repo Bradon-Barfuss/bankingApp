@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from "./components/Navbar.js";
+
 import AccountSummary from "./components/AccountSummary.js";
 import Logout from "./components/logout.js";
 import Register from "./components/Register.js";
@@ -11,7 +11,6 @@ import TransactionHistory  from "./components/TransactionHistory.js";
 const App = () => {
   return (
     <div>
-      <Navbar />
       <Routes>
         <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} allowedRoles={["Admin", "Employee"]}/> }  /> //set allowed roles for that site
         <Route path="/Money" element={<ProtectedRoute component={Money} allowedRoles={["Admin", "Employee", "Customer"]}/>} />

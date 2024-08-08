@@ -14,7 +14,6 @@ const Record = (props) => (
 );
 
 export default function Records() {
-  
   const [record, setRecord] = useState(null);
 
   useEffect(() => {
@@ -66,6 +65,4 @@ export default function Records() {
       </div>
     </div>
   );
-
-  
 }

@@ -11,13 +11,9 @@ export default function AccountManagement() {
     const [accountTypeSending, setAccountTypeSending] = useState("savings"); 
     const [accountTypeReciving, setAccountTypeReciving] = useState("savings"); 
     const [amountInteral, setAmountInteral] = useState("");
-
-
-    
-    const [accountType2, setAccountType2] = useState("checking");
-    const [accountExternalSending, setAccountExternalSending] = useState("savings"); 
-    const [accountExternalRecieving, setAccountExternalRecieving] = useState("savings");
-
+//    const [accountType2, setAccountType2] = useState("checking");
+//    const [accountExternalSending, setAccountExternalSending] = useState("savings"); 
+//    const [accountExternalRecieving, setAccountExternalRecieving] = useState("savings");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,10 +21,7 @@ export default function AccountManagement() {
             const response = await fetch("http://localhost:5000/users/getUserBySession", { //had to get the current user using the session by getting the email
                 credentials: 'include'
             });
-
             const account = await response.json();
-            console.log(account); //
-
             setAccount(account);
         }
 
@@ -36,7 +29,9 @@ export default function AccountManagement() {
     }, []);
 
     const Deposit = async () => {
-        console.log("HHHHHHIIIIIIIIII", account.email)
+        console.log("ACCOUNT TYPE: ", accountType)
+        console.log("AMOUNT: ", amount)
+        console.log("Email: ", amount.email)
 
         if (accountType === "savings") {
             const response = await fetch(`http://localhost:5000/banking/increaseSavings/${account.email}`, {
@@ -53,7 +48,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: updatedSavings,
                     checking: account.checking,
-                    investing: account.investing
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);      
             }
@@ -74,7 +71,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: account.savings,
                     checking: updatedChecking,
-                    investing: account.investing
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);   
             }
@@ -94,7 +93,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: account.savings,
                     checking: account.checking,
-                    investing: updatedInvesting
+                    investing: updatedInvesting,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);   
             }
@@ -119,7 +120,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: updatedSavings,
                     checking: account.checking,
-                    investing: account.investing
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);    
             } else {
@@ -140,7 +143,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: account.savings,
                     checking: updatedChecking,
-                    investing: account.investing
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);  
             } else {
@@ -162,7 +167,9 @@ export default function AccountManagement() {
                 const updatedAccount = {
                     savings: account.savings,
                     checking: account.checking,
-                    investing: updatedInvesting
+                    investing: updatedInvesting,
+                    role: account.role,
+                    email: account.email
                 };
                 setAccount(updatedAccount);   
             } else {
@@ -171,6 +178,82 @@ export default function AccountManagement() {
         };
     };
 
+
+
+    const Transfer = async () => {
+
+        if (accountType === "savings") {
+            const response = await fetch(`http://localhost:5000/banking/withdrawSavings/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ savings: parseFloat(amount) }),
+            });
+
+            if (response.ok) {
+                const updatedSavings = parseFloat(account.savings) - parseFloat(amount);
+                const updatedAccount = {
+                    savings: updatedSavings,
+                    checking: account.checking,
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
+                };
+                setAccount(updatedAccount);    
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+        if (accountType === "checking") {
+            const response = await fetch(`http://localhost:5000/banking/withdrawChecking/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: parseFloat(amount) }),
+            });
+            if (response.ok) {
+                const updatedChecking = parseFloat(account.checking) - parseFloat(amount);
+                const updatedAccount = {
+                    savings: account.savings,
+                    checking: updatedChecking,
+                    investing: account.investing,
+                    role: account.role,
+                    email: account.email
+                };
+                setAccount(updatedAccount);  
+            } else {
+                window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
+            }
+        };
+        if (accountType === "investing") {
+            const response = await fetch(`http://localhost:5000/banking/withdrawInvesting/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ investing: parseFloat(amount) }),
+            });
+
+            if (response.ok) {
+                const updatedInvesting = parseFloat(account.investing) - parseFloat(amount);
+                const updatedAccount = {
+                    savings: account.savings,
+                    checking: account.checking,
+                    investing: updatedInvesting,
+                    role: account.role,
+                    email: account.email
+                };
+                setAccount(updatedAccount);   
+            } else {
+                window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
+            }
+        };
+    };
 
 
     return (
@@ -214,12 +297,9 @@ export default function AccountManagement() {
                         />
                     </label>
                 </div>
-
-
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
                 <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit' }}>Transaction History</Link></button>
-
                 <div>
                     <br/>
                     <h2>Internal Transfer</h2>
@@ -250,9 +330,21 @@ export default function AccountManagement() {
                             />
                         </label>
                     </div>
-                    <button onClick={Deposit}>Submit</button>
+                    <button onClick={Transfer}>Submit</button> // was deposit instead of transfer
                 </div>
 
+            </div>
+        </div>
+    );
+}
+
+/* internal
+
+
+                */
+
+/*
+EXTERNAL
                 {account.role !== "Customer" &&
                     <div>
                         <br/>
@@ -311,7 +403,5 @@ export default function AccountManagement() {
                         <button onClick={Deposit}>Submit</button>
                     </div>
                 }
-            </div>
-        </div>
-    );
-}
+
+                */

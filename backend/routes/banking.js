@@ -44,7 +44,9 @@ recordRoutes.route("/banking/increaseChecking/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { checking: req.body.checking }
         };
+        console.log(newvalues)
         const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        console.log(result)
         console.log("Checking updated. Email: ", req.params.email, " Increase By: ", req.body.checking); //debug
         res.json(result)
     } catch (err) {

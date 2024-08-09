@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 
 
 export default function AccountManagement() {
-    const [account, setAccount] = useState({ savings: 0, checking: 0 });
+    const [account, setAccount] = useState({ savings: 0, checking: 0, investing: 0});
     const [amount, setAmount] = useState("");
 
     const [accountType, setAccountType] = useState("savings");
     const [accountType2, setAccountType2] = useState("checking");
+    const [accountType3, setAccountType3] = useState("investing")
 
     const navigate = useNavigate();
 
@@ -44,6 +45,21 @@ export default function AccountManagement() {
         if (accountType === "checking") {
 
             const response = await fetch(`http://localhost:5000/banking/increaseChecking/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: parseFloat(amount) }),
+            });
+
+            if (response.ok) {
+                navigate("/AccountSummary");
+            }
+        };
+        if (accountType === "investing") {
+
+            const response = await fetch(`http://localhost:5000/banking/increaseInvesting/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -94,9 +110,9 @@ export default function AccountManagement() {
             }
 
         };
-        if (accountType === "checking") { //CHANGE TO INVESTING
+        if (accountType === "investing") { //CHANGE TO INVESTING
 
-            const response = await fetch(`http://localhost:5000/banking/withdrawChecking/${account.email}`, {
+            const response = await fetch(`http://localhost:5000/banking/withdrawInvesting/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -132,7 +148,7 @@ export default function AccountManagement() {
                         </tr>
                         <tr>
                             <th>Investing: </th>
-                            <td>{account.inesting}</td>
+                            <td>{account.investing}</td>
                         </tr>
                     </tbody>
                 </table>

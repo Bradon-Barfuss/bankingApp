@@ -5,7 +5,7 @@ const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn.js"); // This will help us connect to the database
 const ObjectId = require("mongodb").ObjectId; // This helps convert the id from string to ObjectId for the _id.
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 
 
 recordRoutes.route("/users/validAccount").post(async (req, res) => {

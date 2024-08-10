@@ -8,12 +8,19 @@ export default function AccountManagement() {
     const [accountType, setAccountType] = useState("savings");
     const [amount, setAmount] = useState("");
 
-    const [accountTypeSending, setAccountTypeSending] = useState("savings"); 
-    const [accountTypeReciving, setAccountTypeReciving] = useState("checking"); 
+    const [accountTypeSending, setAccountTypeSending] = useState("savings");
+    const [accountTypeReciving, setAccountTypeReciving] = useState("checking");
     const [amountInteral, setAmountInteral] = useState("");
-//    const [accountType2, setAccountType2] = useState("checking");
-//    const [accountExternalSending, setAccountExternalSending] = useState("savings"); 
-//    const [accountExternalRecieving, setAccountExternalRecieving] = useState("savings");
+
+
+
+    const [accountNumberExternalSending, setAccountNumberExternalSending] = useState("savings");
+    const [accountNumberExternalRecieving, setAccountNumberExternalRecieving] = useState("savings");
+    const [accountTypeExternalSending, setAccountTypeExternalSending] = useState("savings");
+    const [accountTypeExternalReciving, setAccountTypeExternalReciving] = useState("checking");
+    const [amountExternal, setAmountExternal] = useState("");
+
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,7 +59,7 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);      
+                setAccount(updatedAccount);
             }
         }
 
@@ -75,7 +82,7 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);   
+                setAccount(updatedAccount);
             }
         };
 
@@ -97,7 +104,7 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);   
+                setAccount(updatedAccount);
             }
         };
     }
@@ -123,7 +130,7 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);    
+                setAccount(updatedAccount);
             } else {
                 window.alert("Can't go below 0")
             }
@@ -146,7 +153,7 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);  
+                setAccount(updatedAccount);
             } else {
                 window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
             }
@@ -170,20 +177,20 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email
                 };
-                setAccount(updatedAccount);   
+                setAccount(updatedAccount);
             } else {
                 window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
             }
         };
     };
 
-//================= TRANSFER INTERAL ====================
+    //================= TRANSFER INTERAL ====================
 
-    const Transfer = async () => {
+    const TransferInteral = async () => {
         let updatedSavingsInteral = account.savings
         let updatedCheckingInteral = account.checking
         let updatedInvestingInteral = account.investing
-        
+
         if (accountTypeSending === "savings") {
             const response = await fetch(`http://localhost:5000/banking/withdrawSavings/${account.email}`, {
                 method: "POST",
@@ -290,6 +297,134 @@ export default function AccountManagement() {
     };
 
 
+            console.log('Account Number Sending: ', accountNumberExternalSending, "\nAccount Type Sending: ", accountTypeExternalSending, 
+                "\n Account Number Reciving: ", accountNumberExternalRecieving, "\nAccount Type Reciving: ", amountExternal)
+
+    //================= TRANSFER EXTERNAL ====================
+
+    const TransferExternal = async () => {
+        let updatedSavingsExternal = account.savings
+        let updatedCheckingExternal = account.checking
+        let updatedInvestingExternal = account.investing
+
+        if (accountTypeExternalSending === "savings") {
+            const response = await fetch(`http://localhost:5000/banking/decreaseSavingsExternal/${accountNumberExternalSending}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ savings: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                updatedSavingsExternal = parseFloat(account.savings) - parseFloat(amountExternal);
+                console.log("\n\nAfter decreasing savings account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+
+        if (accountTypeExternalSending === "checking") {
+            const response = await fetch(`http://localhost:5000/banking/decreaseCheckingExternal/${accountNumberExternalSending}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                updatedCheckingExternal = parseFloat(account.checking) - parseFloat(amountExternal);
+                console.log("\n\nAfter decreasing checking account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+        if (accountTypeExternalSending === "investing") {
+            const response = await fetch(`http://localhost:5000/banking/decreaseInvestingExternal/${accountNumberExternalSending}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ investing: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                updatedInvestingExternal = parseFloat(account.investing) - parseFloat(amountExternal);
+                console.log("\n\nAfter decreasing investing account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+
+
+        if (accountTypeExternalReciving === "savings") {
+            const response = await fetch(`http://localhost:5000/banking/increaseSavingsExternal/${accountNumberExternalRecieving}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ savings: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                console.log("\n\nAfter increase savings account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+        if (accountTypeExternalReciving === "checking") {
+            const response = await fetch(`http://localhost:5000/banking/increaseCheckingExternal/${accountNumberExternalRecieving}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                console.log("\n\nAfter increase checking account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+
+        if (accountTypeExternalReciving === "investing") {
+            const response = await fetch(`http://localhost:5000/banking/increaseInvestingExternal/${accountNumberExternalRecieving}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ investing: parseFloat(amountExternal) }),
+            });
+
+            if (response.ok) {
+                console.log("\n\nAfter increase investing account: ", account)
+            } else {
+                window.alert("Can't go below 0")
+            }
+        }
+
+
+
+        const updatedAccount = {
+            savings: updatedSavingsExternal,
+            checking: updatedCheckingExternal,
+            investing: updatedInvestingExternal,
+            role: account.role,
+            email: account.email
+        };
+
+        setAccount(updatedAccount)
+    };
+
+
     return (
         <div class="mx-5">
             <div class="text-start border-bottom">
@@ -335,7 +470,7 @@ export default function AccountManagement() {
                 <button onClick={Withdraw}>Withdraw</button>
                 <button><Link to="/TransactionHistory" style={{ textDecoration: 'none', color: 'inherit' }}>Transaction History</Link></button>
                 <div>
-                    <br/>
+                    <br />
                     <h2>Internal Transfer</h2>
                     <div className="d-flex justify-content-between my-0">
                         <label className="d-flex align-items-center">
@@ -364,10 +499,70 @@ export default function AccountManagement() {
                             />
                         </label>
                     </div>
-                    <button onClick={Transfer}>Submit</button>
+                    <button onClick={TransferInteral}>Submit</button>
                 </div>
 
+
+                {account.role !== "Customer" &&
+                    <div>
+                        <br />
+                        <h2>External Transfer</h2>
+                        <div className="d-flex justify-content-start my-0">
+                            <label className="d-flex align-items-center me-3">
+                                <label class="flex-direction-end">
+                                    From:
+                                    <input
+                                        class="mx-2"
+                                        type="number"
+                                        value={accountNumberExternalSending}
+                                        onChange={(e) => setAccountNumberExternalSending(e.target.value)}
+                                    />
+                                </label>
+                                <label className="d-flex align-items-center">
+                                    To:
+                                    <input
+                                        class="mx-2"
+                                        type="number"
+                                        value={accountNumberExternalRecieving}
+                                        onChange={(e) => setAccountNumberExternalRecieving(e.target.value)}
+                                    />
+                                </label>
+                            </label>
+
+                        </div>
+
+                        <div className="d-flex justify-content-between my-0">
+                            <label className="d-flex align-items-center">
+                                From:
+                                <select className="mx-2" value={accountTypeExternalSending} onChange={(e) => setAccountTypeExternalSending(e.target.value)}>
+                                    <option value="savings">Savings</option>
+                                    <option value="checking">Checking</option>
+                                    <option value="investing">Investing</option>
+                                </select>
+                            </label>
+                            <label className="d-flex align-items-center">
+                                To:
+                                <select className="mx-2" value={accountTypeExternalReciving} onChange={(e) => setAccountTypeExternalReciving(e.target.value)}>
+                                    <option value="savings">Savings</option>
+                                    <option value="checking">Checking</option>
+                                    <option value="investing">Investing</option>
+                                </select>
+                            </label>
+                            <label className="d-flex align-items-center">
+                                Amount:
+                                <input
+                                    className="mx-2"
+                                    type="number"
+                                    value={amountExternal}
+                                    onChange={(e) => setAmountExternal(e.target.value)}
+                                />
+                            </label>
+                        </div>
+                        <button onClick={TransferExternal}>Submit</button>
+                    </div>
+                }
             </div>
+
         </div>
     );
 }
@@ -379,63 +574,6 @@ export default function AccountManagement() {
 
 /*
 EXTERNAL
-                {account.role !== "Customer" &&
-                    <div>
-                        <br/>
-                        <h2>External Transfer</h2>
-                        <div className="d-flex justify-content-start my-0">
-                            <label className="d-flex align-items-center me-3">
-                                <label class="flex-direction-end">
-                                From:
-                                <input
-                                    class="mx-2"
-                                    type="number"
-                                    value={accountExternalSending}
-                                    onChange={(e) => setAccountExternalSending(e.target.value)}
-                                />
-                                </label>
-                                <label className="d-flex align-items-center">
-                                    To:
-                                    <input
-                                        class="mx-2"
-                                        type="number"
-                                        value={accountExternalRecieving}
-                                        onChange={(e) => setAccountExternalRecieving(e.target.value)}
-                                    />
-                                </label>
-                            </label>
 
-                        </div>
-
-                        <div className="d-flex justify-content-between my-0">
-                            <label className="d-flex align-items-center">
-                                From:
-                                <select className="mx-2" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
-                                    <option value="savings">Savings</option>
-                                    <option value="checking">Checking</option>
-                                    <option value="investing">Investing</option>
-                                </select>
-                            </label>
-                            <label className="d-flex align-items-center">
-                                To:
-                                <select className="mx-2" value={accountType2} onChange={(e) => setAccountType(e.target.value)}>
-                                    <option value="savings">Savings</option>
-                                    <option value="checking">Checking</option>
-                                    <option value="investing">Investing</option>
-                                </select>
-                            </label>
-                            <label className="d-flex align-items-center">
-                                Amount:
-                                <input
-                                    className="mx-2"
-                                    type="number"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                />
-                            </label>
-                        </div>
-                        <button onClick={Deposit}>Submit</button>
-                    </div>
-                }
 
                 */

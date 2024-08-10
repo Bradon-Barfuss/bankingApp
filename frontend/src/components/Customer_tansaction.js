@@ -34,7 +34,7 @@ export default function CustomerTransactions() {
   }, []);
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="d-flex justify-content-center align-items-center vh-10">
       <div>
         <ul className="list-unstyled d-flex justify-content-between">
           <li><h3 className="pl-3">My Transactions</h3></li>

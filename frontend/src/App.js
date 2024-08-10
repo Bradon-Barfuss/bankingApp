@@ -17,7 +17,10 @@ const App = () => {
       <Routes>
         <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} allowedRoles={["Admin", "Employee"]}/> }  /> //set allowed roles for that site
         <Route path="/Money" element={<ProtectedRoute component={Money} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
-        <Route path="/TransactionHistory" element={<ProtectedRoute component={TransactionHistory} />} />
+        <Route path="/TransactionHistory" element={<ProtectedRoute component={TransactionHistory} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
+        <Route path="/EmployeeTransactions" element={<ProtectedRoute component={EmployeeTransactions} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
+        <Route path="/CustomerTransactions" element={<ProtectedRoute component={CustomerTransactions} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
+
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Login />} />
         <Route path="/logout" element={<Logout />} />

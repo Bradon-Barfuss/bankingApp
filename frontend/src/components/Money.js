@@ -9,7 +9,7 @@ export default function AccountManagement() {
     const [amount, setAmount] = useState("");
 
     const [accountTypeSending, setAccountTypeSending] = useState("savings"); 
-    const [accountTypeReciving, setAccountTypeReciving] = useState("savings"); 
+    const [accountTypeReciving, setAccountTypeReciving] = useState("checking"); 
     const [amountInteral, setAmountInteral] = useState("");
 //    const [accountType2, setAccountType2] = useState("checking");
 //    const [accountExternalSending, setAccountExternalSending] = useState("savings"); 
@@ -104,7 +104,6 @@ export default function AccountManagement() {
 
 
     const Withdraw = async () => {
-
         if (accountType === "savings") {
             const response = await fetch(`http://localhost:5000/banking/withdrawSavings/${account.email}`, {
                 method: "POST",
@@ -178,81 +177,116 @@ export default function AccountManagement() {
         };
     };
 
-
+//================= TRANSFER INTERAL ====================
 
     const Transfer = async () => {
-
-        if (accountType === "savings") {
+        let updatedSavingsInteral = account.savings
+        let updatedCheckingInteral = account.checking
+        let updatedInvestingInteral = account.investing
+        
+        if (accountTypeSending === "savings") {
             const response = await fetch(`http://localhost:5000/banking/withdrawSavings/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 credentials: 'include',
-                body: JSON.stringify({ savings: parseFloat(amount) }),
+                body: JSON.stringify({ savings: parseFloat(amountInteral) }),
             });
 
             if (response.ok) {
-                const updatedSavings = parseFloat(account.savings) - parseFloat(amount);
-                const updatedAccount = {
-                    savings: updatedSavings,
-                    checking: account.checking,
-                    investing: account.investing,
-                    role: account.role,
-                    email: account.email
-                };
-                setAccount(updatedAccount);    
+                updatedSavingsInteral = parseFloat(account.savings) - parseFloat(amountInteral);
+                console.log("\n\nAfter decreasing savings account: ", account)
             } else {
                 window.alert("Can't go below 0")
             }
         }
-        if (accountType === "checking") {
+        else if (accountTypeSending === "checking") {
             const response = await fetch(`http://localhost:5000/banking/withdrawChecking/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 credentials: 'include',
-                body: JSON.stringify({ checking: parseFloat(amount) }),
+                body: JSON.stringify({ checking: parseFloat(amountInteral) }),
             });
             if (response.ok) {
-                const updatedChecking = parseFloat(account.checking) - parseFloat(amount);
-                const updatedAccount = {
-                    savings: account.savings,
-                    checking: updatedChecking,
-                    investing: account.investing,
-                    role: account.role,
-                    email: account.email
-                };
-                setAccount(updatedAccount);  
+                updatedCheckingInteral = parseFloat(account.checking) - parseFloat(amountInteral);
             } else {
                 window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
             }
-        };
-        if (accountType === "investing") {
+        }
+        else if (accountTypeSending === "investing") {
             const response = await fetch(`http://localhost:5000/banking/withdrawInvesting/${account.email}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 credentials: 'include',
-                body: JSON.stringify({ investing: parseFloat(amount) }),
+                body: JSON.stringify({ investing: parseFloat(amountInteral) }),
             });
 
             if (response.ok) {
-                const updatedInvesting = parseFloat(account.investing) - parseFloat(amount);
-                const updatedAccount = {
-                    savings: account.savings,
-                    checking: account.checking,
-                    investing: updatedInvesting,
-                    role: account.role,
-                    email: account.email
-                };
-                setAccount(updatedAccount);   
+                updatedInvestingInteral = parseFloat(account.investing) - parseFloat(amountInteral);
             } else {
                 window.alert("You are already broke dude, please don't go below 0 please, you already had to get a car loan")
             }
         };
+
+        //internal deposit 
+        if (accountTypeReciving === "savings") {
+            const response = await fetch(`http://localhost:5000/banking/increaseSavings/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ savings: parseFloat(amountInteral) }),
+            });
+
+            if (response.ok) {
+                updatedSavingsInteral = parseFloat(account.savings) + parseFloat(amountInteral);
+            }
+        }
+
+        else if (accountTypeReciving === "checking") {
+            const response = await fetch(`http://localhost:5000/banking/increaseChecking/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ checking: parseFloat(amountInteral) }),
+            });
+
+            if (response.ok) {
+                updatedCheckingInteral = parseFloat(account.checking) + parseFloat(amountInteral);
+            }
+        }
+
+        else if (accountTypeReciving === "investing") {
+            const response = await fetch(`http://localhost:5000/banking/increaseInvesting/${account.email}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify({ investing: parseFloat(amountInteral) }),
+            });
+            if (response.ok) {
+                updatedInvestingInteral = parseFloat(account.investing) + parseFloat(amountInteral);
+            }
+        };
+
+        const updatedAccount = {
+            savings: updatedSavingsInteral,
+            checking: updatedCheckingInteral,
+            investing: updatedInvestingInteral,
+            role: account.role,
+            email: account.email
+        };
+
+        setAccount(updatedAccount)
     };
 
 
@@ -330,7 +364,7 @@ export default function AccountManagement() {
                             />
                         </label>
                     </div>
-                    <button onClick={Transfer}>Submit</button> // was deposit instead of transfer
+                    <button onClick={Transfer}>Submit</button>
                 </div>
 
             </div>

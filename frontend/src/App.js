@@ -7,6 +7,9 @@ import Register from "./components/Register.js";
 import Login from "./components/Login.js";
 import Money from "./components/Money.js"
 import TransactionHistory  from "./components/TransactionHistory.js";
+import EmployeeTransactions from "./components/Employee_tansaction.js";
+import CustomerTransactions from "./components/Customer_tansaction.js";
+
 
 const App = () => {
   return (

@@ -54,7 +54,7 @@ export default function Login() {
               if(userRole === 'Admin'){
                 navigate("/AccountSummary");
               } else if (userRole === 'Employee'){
-                navigate("/AccountSummary") //make it employee page, where they put in bank number and pulls up bank information
+                navigate("/Money") //make it employee page, where they put in bank number and pulls up bank information
               }
               else if (userRole === 'Customer'){
                 navigate("Money") //Make it customer page

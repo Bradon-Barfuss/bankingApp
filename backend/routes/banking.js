@@ -35,6 +35,114 @@ recordRoutes.route("/banking/increaseSavings/:email").post(async (req, res) => {
     }
 });
 
+recordRoutes.route("/banking/decreaseSavingsExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { savings: -req.body.savings } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("Savings updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.savings); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+
+recordRoutes.route("/banking/decreaseCheckingExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { checking: -req.body.checking } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("checking updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.checking); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+recordRoutes.route("/banking/decreaseInvestingExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { investing: -req.body.investing } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("investing updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.investing); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+
+recordRoutes.route("/banking/increaseSavingsExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { savings: req.body.savings } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("Savings updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.savings); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+
+recordRoutes.route("/banking/increaseCheckingExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { checking: req.body.checking } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("checking updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.checking); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+
+recordRoutes.route("/banking/increaseInvestingExternal/:accountNumber").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseFloat(req.params.accountNumber) };
+
+        let newvalues = {
+            $inc: { investing: req.body.investing } //increase users saving by the savings in reqest body
+        };
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues) //update the databases by new value
+        console.log(result)
+        console.log("investing updated. accountNumber: ", req.params.accountNumber, " Increase By: ", req.body.investing); //debug
+
+        res.json(result)
+    } catch (err) {
+        throw err;
+    }
+});
+
+
 //Old route name: updateChecking/:email
 //Update the users checking account
 recordRoutes.route("/banking/increaseChecking/:email").post(async (req, res) => {
@@ -44,7 +152,9 @@ recordRoutes.route("/banking/increaseChecking/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { checking: req.body.checking }
         };
+        console.log(newvalues)
         const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        console.log(result)
         console.log("Checking updated. Email: ", req.params.email, " Increase By: ", req.body.checking); //debug
         res.json(result)
     } catch (err) {
@@ -69,6 +179,8 @@ recordRoutes.route("/banking/increaseInvesting/:email").post(async (req, res) =>
 });
 
 
+
+
 //====================================================== DECREASE ACCOUNTS =================================
 //Old Route name: /withdrawSavings/:email
 recordRoutes.route("/banking/withdrawSavings/:email").post(async (req, res) => {
@@ -78,14 +190,14 @@ recordRoutes.route("/banking/withdrawSavings/:email").post(async (req, res) => {
 
         //Check if savings is above 0
         let projection = { savings: 1 }
-        emailWithSavings = await db_connect.collection("users").findOne(myquery, { projection }) //DO I NEED TO ADD A LET IN FRONT?
+        let emailWithSavings = await db_connect.collection("users").findOne(myquery, { projection }) //DO I NEED TO ADD A LET IN FRONT?
         if (emailWithSavings.savings - req.body.savings < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
 
         //Update Savings
         let newvalues = { $inc: { savings: -req.body.savings } };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        const result = await  db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(200).json({ message: "It Worked" })
     } catch (err) {
         throw err;
@@ -95,12 +207,20 @@ recordRoutes.route("/banking/withdrawSavings/:email").post(async (req, res) => {
 //Old route Name /withdrawChecking/:email
 recordRoutes.route("/banking/withdrawChecking/:email").post(async (req, res) => {
     try {
+        console.log("=========Checking withdraw ==========")
         let db_connect = dbo.getDb();
         let myquery = { email: req.params.email };
+        console.log("My Query: ", myquery)
+
+
 
         //Check if checkings is above 0
         let projection = { checking: 1 }
-        emailWithChecking = await db_connect.collection("users").findOne(myquery, { projection })
+        console.log("My Projection: ", projection)
+
+        let emailWithChecking = await db_connect.collection("users").findOne(myquery, { projection })
+        console.log("My emailWithInvesting: ", emailWithChecking)
+
         if (emailWithChecking.checking - req.body.checking < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
@@ -109,7 +229,10 @@ recordRoutes.route("/banking/withdrawChecking/:email").post(async (req, res) => 
         let newvalues = {
             $inc: { checking: -req.body.checking }
         };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        console.log("My newvalues: ", newvalues)
+
+
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues)
         return await res.status(200).json({ message: "IT did it!" })
     } catch (err) {
         throw err;
@@ -118,22 +241,35 @@ recordRoutes.route("/banking/withdrawChecking/:email").post(async (req, res) => 
 
 recordRoutes.route("/banking/withdrawInvesting/:email").post(async (req, res) => {
     try {
+        console.log("=========Investing withdraw ==========")
+
         let db_connect = dbo.getDb();
+
         let myquery = { email: req.params.email };
 
+        console.log("My Query: ", myquery)
         //Check if investing is above 0
         let projection = { investing: 1 }
-        emailWithInvesting = await db_connect.collection("users").findOne(myquery, { projection })
-        if (emailWithChecking.investing - req.body.investing < 0) {
+        console.log("My Projection: ", projection)
+
+        let emailWithInvesting = await db_connect.collection("users").findOne(myquery, { projection })
+        console.log("My emailWithInvesting: ", emailWithInvesting)
+
+        
+        if (emailWithInvesting.investing - req.body.investing < 0) {
             return await res.status(400).json({ message: "Withdraw to much money" })
         }
 
+        console.log(req.body.investing)
         //update investing
         let newvalues = {
             $inc: { investing: -req.body.investing }
         };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
-        return await res.status(200).json({ message: "IT did it!" })
+        console.log("My newvalues: ", newvalues)
+
+
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues)
+        return await res.status(200).json({ message: "IT did it investings!" })
     } catch (err) {
         throw err;
     }

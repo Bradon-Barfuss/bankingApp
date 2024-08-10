@@ -48,6 +48,19 @@ recordRoutes.route("/users/getRole/:email").get(async (req, res) =>{
     }
 })
 
+recordRoutes.route("/users/getEmail/:accountNumber").get(async (req, res) =>{
+    try{
+        let db_connect = dbo.getDb();
+        let projection = {email: 1};
+        let query = { accountNumber: req.params.accountNumber };
+
+        const user = await db_connect.collection("users").findOne(query, {projection});
+        res.json(user)
+
+    } catch (err){
+        throw err;
+    }
+})
 
 // List all users
 //API

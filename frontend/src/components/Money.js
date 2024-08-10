@@ -105,22 +105,7 @@ export default function AccountManagement() {
                     email: account.email
                 };
                 setAccount(updatedAccount);
-            }
-        };
-        if (accountType === "investing") {
-
-            const response = await fetch(`http://localhost:5000/banking/increaseInvesting/${account.email}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include',
-                body: JSON.stringify({ checking: parseFloat(amount) }),
-            });
-
-            if (response.ok) {
-                navigate("/AccountSummary");
-            }
+            } 
         };
     }
 

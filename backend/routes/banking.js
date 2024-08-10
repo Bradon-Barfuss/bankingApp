@@ -170,15 +170,16 @@ recordRoutes.route("/banking/increaseInvesting/:email").post(async (req, res) =>
         let newvalues = {
             $inc: { investing: req.body.investing }
         };
-        const result = db_connect.collection("users").updateOne(myquery, newvalues)
+        console.log(newvalues)
+        const result = await db_connect.collection("users").updateOne(myquery, newvalues)
+        console.log(result)
+
         console.log("investing updated. Email: ", req.params.email, " Increase By: ", req.body.investing); //debug
         res.json(result)
     } catch (err) {
         throw err;
     }
 });
-
-
 
 
 //====================================================== DECREASE ACCOUNTS =================================
@@ -244,7 +245,6 @@ recordRoutes.route("/banking/withdrawInvesting/:email").post(async (req, res) =>
         console.log("=========Investing withdraw ==========")
 
         let db_connect = dbo.getDb();
-
         let myquery = { email: req.params.email };
 
         console.log("My Query: ", myquery)

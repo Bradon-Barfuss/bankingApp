@@ -5,7 +5,9 @@ import AccountSummary from "./components/AccountSummary.js";
 import Logout from "./components/logout.js";
 import Register from "./components/Register.js";
 import Login from "./components/Login.js";
-import Money from "./components/Money.js"
+import Money from "./components/Money.js";
+import MoneyID from "./components/MoneyID.js"
+
 import TransactionHistory  from "./components/TransactionHistory.js";
 import EmployeeTransactions from "./components/Employee_tansaction.js";
 import CustomerTransactions from "./components/Customer_tansaction.js";
@@ -15,9 +17,11 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} allowedRoles={["Admin", "Employee"]}/> }  /> //set allowed roles for that site
+        <Route path="/AccountSummary" element={<ProtectedRoute component={AccountSummary} allowedRoles={["Admin"]}/> }  /> 
         <Route path="/Money" element={<ProtectedRoute component={Money} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
-        <Route path="/TransactionHistory" element={<ProtectedRoute component={TransactionHistory} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
+        <Route path="/Money/:accountNumber" element={<MoneyID allowedRoles={["Admin", "Employee"]}/>} />
+
+        <Route path="/TransactionHistory/:accountNumber" element={<ProtectedRoute component={TransactionHistory} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
         <Route path="/EmployeeTransactions" element={<ProtectedRoute component={EmployeeTransactions} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
         <Route path="/CustomerTransactions" element={<ProtectedRoute component={CustomerTransactions} allowedRoles={["Admin", "Employee", "Customer"]}/>} />
 

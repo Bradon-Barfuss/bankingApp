@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
 export default function AccountManagement() {
-    let [accountNumber, setAccountNumber] = useState("")
-    let [employeeView, setEmployeeView] = useState("")
-    const [account, setAccount] = useState({ accountNumber: 0, savings: 0, checking: 0, investing: 0, email: "" });
+    const {accountNumber} = useParams();
+    
+
+    const [account, setAccount] = useState({ savings: 0, checking: 0, investing: 0, email: "" });
     const [accountType, setAccountType] = useState("savings");
     const [amount, setAmount] = useState("");
-
 
     const [accountTypeSending, setAccountTypeSending] = useState("savings");
     const [accountTypeReciving, setAccountTypeReciving] = useState("checking");
@@ -28,20 +28,7 @@ export default function AccountManagement() {
 
     useEffect(() => {
         async function fetchAccount() {
-            const response = await fetch("http://localhost:5000/users/getUserBySession", { //had to get the current user using the session by getting the email
-                credentials: 'include'
-            });
-            const account = await response.json();
-            setAccount(account);
-        }
-
-        fetchAccount();
-    }, []);
-
-    const ViewAccount = async () => {
-        setEmployeeView(true)
-        async function fetchAccount() {
-            const response = await fetch(`http://localhost:5000/users/getUserById/${parseInt(accountNumber)}`, { //had to get the current user using the session by getting the email
+            const response = await fetch(`http://localhost:5000/users/getUserById/${accountNumber}`, { //had to get the current user using the session by getting the email
                 credentials: 'include'
             });
             const account = await response.json();
@@ -49,9 +36,12 @@ export default function AccountManagement() {
         }
         console.log(account)
         fetchAccount();
-    }
+    }, []);
 
     const Deposit = async () => {
+        console.log("ACCOUNT TYPE: ", accountType)
+        console.log("AMOUNT: ", amount)
+        console.log("Email: ", amount.email)
 
         if (accountType === "savings") {
             const response = await fetch(`http://localhost:5000/banking/increaseSavings/${account.email}`, {
@@ -96,7 +86,6 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email,
                     accountNumber: account.accountNumber
-
                 };
                 setAccount(updatedAccount);
             }
@@ -120,13 +109,11 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email,
                     accountNumber: account.accountNumber
-
                 };
                 setAccount(updatedAccount);
-            }
+            } 
         };
-
-        let results = await fetch(`http://localhost:5000/transaction/addTransaction`, {
+        await fetch(`http://localhost:5000/transaction/addTransaction`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -134,9 +121,7 @@ export default function AccountManagement() {
             credentials: 'include',
             body: JSON.stringify({ accountNumber: account.accountNumber, AccountType: accountType, AmountSent:  parseFloat(amount) }),
         });
-        console.log(results)
     }
-
 
 
     const Withdraw = async () => {
@@ -159,7 +144,6 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email,
                     accountNumber: account.accountNumber
-
                 };
                 setAccount(updatedAccount);
             } else {
@@ -184,7 +168,6 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email,
                     accountNumber: account.accountNumber
-
                 };
                 setAccount(updatedAccount);
             } else {
@@ -210,7 +193,6 @@ export default function AccountManagement() {
                     role: account.role,
                     email: account.email,
                     accountNumber: account.accountNumber
-
                 };
                 setAccount(updatedAccount);
             } else {
@@ -327,14 +309,13 @@ export default function AccountManagement() {
                 updatedInvestingInteral = parseFloat(account.investing) + parseFloat(amountInteral);
             }
         };
-
         await fetch(`http://localhost:5000/transaction/addTransactionInternal`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             credentials: 'include',
-            body: JSON.stringify({ accountNumber: account.accountNumber, SendingAccount: accountTypeSending, RecievingAccount: accountTypeReciving, AmountSent: parseFloat(amountInteral) }),
+            body: JSON.stringify({ accountNumber: account.accountNumber, SendingAccount: accountTypeSending, RecievingAccount: accountTypeReciving,  AmountSent: parseFloat(amountInteral) }),
         });
 
         const updatedAccount = {
@@ -344,15 +325,14 @@ export default function AccountManagement() {
             role: account.role,
             email: account.email,
             accountNumber: account.accountNumber
-
         };
 
         setAccount(updatedAccount)
     };
 
 
-    console.log('Account Number Sending: ', accountNumberExternalSending, "\nAccount Type Sending: ", accountTypeExternalSending,
-        "\n Account Number Reciving: ", accountNumberExternalRecieving, "\nAccount Type Reciving: ", amountExternal)
+            console.log('Account Number Sending: ', accountNumberExternalSending, "\nAccount Type Sending: ", accountTypeExternalSending, 
+                "\n Account Number Reciving: ", accountNumberExternalRecieving, "\nAccount Type Reciving: ", amountExternal)
 
     //================= TRANSFER EXTERNAL ====================
 
@@ -471,11 +451,10 @@ export default function AccountManagement() {
                 "Content-Type": "application/json",
             },
             credentials: 'include',
-            body: JSON.stringify({
-                SendingAccountNumber: parseInt(accountNumberExternalSending), RecievingAccountNumber: parseInt(accountNumberExternalRecieving),
-                SendingAccount: accountTypeExternalSending, RecievingAccount: accountTypeExternalReciving, AmountSent: parseFloat(amountExternal)
-            }),
+            body: JSON.stringify({ SendingAccountNumber: parseInt(accountNumberExternalSending), RecievingAccountNumber: parseInt(accountNumberExternalRecieving),
+                SendingAccount: accountTypeExternalSending, RecievingAccount: accountTypeExternalReciving,   AmountSent: parseFloat(amountExternal) }),
         });
+
 
         const updatedAccount = {
             savings: updatedSavingsExternal,
@@ -484,7 +463,6 @@ export default function AccountManagement() {
             role: account.role,
             email: account.email,
             accountNumber: account.accountNumber
-
         };
 
         setAccount(updatedAccount)
@@ -493,20 +471,6 @@ export default function AccountManagement() {
 
     return (
         <div class="mx-5">
-            {(account.role !== "Customer" || employeeView === true) &&
-                <div className="d-flex align-items-center">
-                    <label className="d-flex align-items-center">
-                        Account Number:
-                        <input
-                            className="mx-2"
-                            type="number"
-                            value={accountNumber}
-                            onChange={(e) => setAccountNumber(e.target.value)}
-                        />
-                    </label>
-                    <button onClick={ViewAccount} className="btn btn-primary btn-sm ml-2" style={{ marginTop: '-7px' }} >Submit</button>
-
-                </div>}
             <div class="text-start border-bottom">
                 <h3 class="mt-4">Account Management</h3>
             </div>
@@ -548,7 +512,6 @@ export default function AccountManagement() {
                 </div>
                 <button onClick={Deposit}>Deposit</button>
                 <button onClick={Withdraw}>Withdraw</button>
-
                 <button><Link to={`/TransactionHistory/${account.accountNumber}`} style={{ textDecoration: 'none', color: 'inherit' }}>Transaction History</Link></button>
                 <div>
                     <br />
@@ -584,7 +547,6 @@ export default function AccountManagement() {
                 </div>
 
 
-                {(account.role !== "Customer" || employeeView === true) &&
                     <div>
                         <br />
                         <h2>External Transfer</h2>
@@ -646,8 +608,7 @@ export default function AccountManagement() {
                             <Link to={"/Register"} className="btn btn-primary btn-sm" style={{ marginLeft: '10px' }}>Create Account</Link>
                         </div>
                     </div>
-
-                }
+                
             </div>
 
         </div>

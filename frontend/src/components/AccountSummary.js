@@ -40,7 +40,7 @@ const Record = ({ record, onRoleChange }) => {
           <option value="Employee">Employee</option>
         </select>
       </td>
-      <td><Link to={"/Money"}>Account Information</Link></td>
+      <td><Link to={`/Money/${record.accountNumber}`}>Account Information</Link></td>
     </tr>
   );
 };

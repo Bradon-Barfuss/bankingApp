@@ -89,6 +89,18 @@ recordRoutes.route("/users/getUserBySession").get(async (req, res) => {
     }
 });
 
+recordRoutes.route("/users/getUserById/:accountNumber").get(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myquery = { accountNumber: parseInt(req.params.accountNumber) };
+
+        const user = await db_connect.collection("users").findOne(myquery); //FILTER IT by the found email
+        console.log(user)
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(400).json({ message: "error" }); //if no email was found, 
+    }
+});
 
 // find users by user email
 //API
